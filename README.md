@@ -2,6 +2,7 @@
 A boilerplace for a Javascript robot platformer
 
 (Grayscale animated gif)
+
 ![alt tag](http://imgur.com/ZDd3gl6.gif)
 
 ##Features
