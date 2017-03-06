@@ -86,7 +86,7 @@ GameState.prototype.drawState = function(ctx, stage){
 				
 				
 				if(me.bullets[i].drawNum == 2){
-					console.log(me.bullets[i].poly);
+					//console.log(me.bullets[i].poly);
 					
 					ctx.fillStyle = "#00ff00";
 					ctx.beginPath();
@@ -179,5 +179,10 @@ GameState.prototype.drawState = function(ctx, stage){
 		ctx.font="10px Verdana";
 		ctx.fillStyle = "rgba(255,0,0, 1)";
 		ctx.fillText("Press Button 0 to activate controller!", 10, 7);
+	}
+	if(lastE != undefined){
+		ctx.font="20px Verdana";
+		ctx.fillStyle = "rgba(255,255,0, 1)";
+		ctx.fillText(lastE.toString(), 10, 14);
 	}
 };

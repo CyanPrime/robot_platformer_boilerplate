@@ -52,10 +52,37 @@ function turnOffFullScreen() {
 }
 
 var buttonDownCheck = function(){
-	if(primepad.getButtonDown(14)) me.left = true;
-	if(primepad.getButtonDown(15)) me.right = true;
+	var leftBtnDown = primepad.getButtonDown(14);
+	var leftAxisDown = (primepad.getAxis(0) <= -1);
+	if(leftBtnDown || leftAxisDown){
+		me.left = true;
+		if(leftBtnDown) me.btnMove = true;
+		if(leftAxisDown){ 
+			me.axisMove = true;
+			me.pChar.axisDelayTimerLeft = 0;
+		}
+	}
+	
+	else me.pChar.axisDelayTimerLeft++;
+	
+	var rightBtnDown = primepad.getButtonDown(15);
+	var rightAxisDown = (primepad.getAxis(0) >= 1);
+	if(rightBtnDown || rightAxisDown){
+		me.right = true;
+		if(rightBtnDown) me.btnMove = true;
+		if(rightAxisDown){
+			me.axisMove = true;
+			me.pChar.axisDelayTimerRight = 0;
+		}
+	}
+	
+	else me.pChar.axisDelayTimerRight++;
+	
 	if(primepad.getButtonDown(0)) me.jump = true;
-	if(primepad.getButtonDown(13)) me.down = true;
+	if(primepad.getButtonDown(13) || primepad.getAxis(1) >= 1){
+		if(primepad.getButtonDown(13)) me.btnMove = true;
+		me.down = true;
+	}
 		
 	if(primepad.getButtonDown(2)) me.fireLV1 = true;
 	if(primepad.getButtonDown(3)) me.fireLV2 = true;
@@ -63,19 +90,53 @@ var buttonDownCheck = function(){
 }
 
 var buttonUpCheck = function(){
-	if(primepad.getButtonUp(14)){
-		me.dashing = false;
-		me.left = false;
-		me.pChar.dashPressTimeLeft = 1;
+	var leftBtnUp = primepad.getButtonUp(14);
+	var leftAxisUp = (primepad.getAxis(0) > -1);
+	if(leftBtnUp || leftAxisUp){
+		if(me.axisMove && leftAxisUp){
+			me.left = false;
+			me.pChar.dashPressTimeLeft = 1;
+		}
+		
+		else if(me.btnMove && leftBtnUp){
+			me.left = false;
+			me.pChar.dashPressTimeLeft = 1;
+			me.btnMove = false;
+		}
 	}
-	if(primepad.getButtonUp(15)){
-		me.dashing = false;
-		me.right = false;
-		me.pChar.dashPressTimeRight = 1;
+	
+	var rightBtnUp = primepad.getButtonUp(15);
+	var rightAxisUp = (primepad.getAxis(0) < 1);
+	if(rightBtnUp || rightAxisUp){
+		if(me.axisMove && rightAxisUp){
+			me.right = false;
+			me.pChar.dashPressTimeRight = 1;
+		}
+		
+		else if(me.btnMove && rightBtnUp){
+			me.right = false;
+			me.pChar.dashPressTimeRight = 1;
+			me.btnMove = false;
+		}
+	}
+	
+	if(!me.btnMove && !me.kbMove){
+		if(me.pChar.axisDelayTimerLeft  > 2 && me.pChar.axisDelayTimerRight > 2){
+			me.axisMove = false;
+			me.dashing = false;
+		}
 	}
 	
 	if(primepad.getButtonUp(0)) me.jump = false;
-	if(primepad.getButtonUp(13)) me.down = false;
+	
+	var downBtnUp = primepad.getButtonUp(13);
+	if(downBtnUp || primepad.getAxis(1) < 1){
+		if(me.btnMove && downBtnUp){
+			me.down = false;
+			me.btnMove = false;
+		}
+		else if (!me.btnMove) me.down = false;
+	}
 	
 	if(primepad.getButtonUp(2)) me.fireLV1 = false;
 	if(primepad.getButtonUp(3)) me.fireLV2 = false;
@@ -106,6 +167,7 @@ var gState;
 var reasonForNo;
 var bgImg;
 var drawCol = false;
+var lastE;
 
 var bulletImg = makeImg('img/bullet.png');
 var playerSpawnImg = makeImg('img/player/spawn.png');
@@ -172,8 +234,14 @@ var playerImgBank = [ //characters
 ];
 
 $( document ).keydown(function( event ) {
-	if(event.keyCode == 37) me.left = true;
-	if(event.keyCode == 39) me.right = true;
+	if(event.keyCode == 37){
+		me.left = true;
+		me.kbMove = true;
+	}
+	if(event.keyCode == 39){
+		me.right = true;
+		me.kbMove = true;
+	}
 	if(event.keyCode == 90) me.jump = true;
 	if(event.keyCode == 40) me.down = true;
 	
@@ -183,17 +251,22 @@ $( document ).keydown(function( event ) {
 });
 
 $( document ).keyup(function( event ) {
+	//lastE = event;
 	//console.log(event);
 	if(event.keyCode == 37){
 		me.dashing = false;
 		me.left = false;
+		me.kbMove = false;
 		me.pChar.dashPressTimeLeft = 1;
+		
 	}
 	if(event.keyCode == 39){
 		me.dashing = false;
-		me.right = false;
+		me.right = false;	
+		me.kbMove = false;
 		me.pChar.dashPressTimeRight = 1;
 	}
+	
 	if(event.keyCode == 90) me.jump = false;
 	if(event.keyCode == 40) me.down = false;
 	if(event.keyCode == 88) me.fireLV1 = false;

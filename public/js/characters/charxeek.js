@@ -42,6 +42,8 @@ var Xeek = function(player){
 	//dash stuff
 	this.dashPressTimeLeft = 0;
 	this.dashPressTimeRight = 0;
+	this.axisDelayTimerLeft = 0;
+	this.axisDelayTimerRight = 0;
 	
 	this.afTime = 0; // time between after images.
 };

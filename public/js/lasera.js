@@ -29,7 +29,7 @@ var Lasera = function(parentID, drawNum, dmg, stun, priority, x, y, width, heigh
 		]);
 	
 	//this.poly.rotateAround(this.angle, this.poly.points[5]);
-	console.log(this.poly);
+	//console.log(this.poly);
 	this.dead = false;
 	this.deadTrigger = false;
 	this.deadTime = 3;
@@ -48,7 +48,7 @@ Lasera.prototype.update = function(plr, stage){
 		//if(this.angle >= 360)  this.angle -= 360;
 		
 		//console.log(this);
-		console.log(this.poly);
+		//console.log(this.poly);
 		this.rotPoint = new Vec2(this.x + this.posMod.x , this.y + this.posMod.y);
 	
 		this.poly = new PolygonCollider([
@@ -63,7 +63,7 @@ Lasera.prototype.update = function(plr, stage){
 		/*
 		this.poly.rotateAround(this.angle, this.rotPoint);
 		this.poly.recalculate();*/
-		console.log(this.poly);
+		//console.log(this.poly);
 		/*for(var i = 0;  i < stage.length; i++){
 			if(this.poly.intersect(stage[i])){
 				this.dead = true;

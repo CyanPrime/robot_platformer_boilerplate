@@ -42,6 +42,10 @@ var Player = function(){
 	
 	this.spawning = true;
 	this.onPassthrough = false;
+	
+	this.btnMove = false;
+	this.axisMove = false;
+	this.kbMove = false;
 };
 
 Player.prototype.update = function(stage){
