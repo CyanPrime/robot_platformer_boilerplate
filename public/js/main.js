@@ -79,8 +79,13 @@ var buttonDownCheck = function(){
 	else me.pChar.axisDelayTimerRight++;
 	
 	if(primepad.getButtonDown(0)) me.jump = true;
-	if(primepad.getButtonDown(13) || primepad.getAxis(1) >= 1){
-		if(primepad.getButtonDown(13)) me.btnMove = true;
+	
+	var downBtnDown = primepad.getButtonDown(13);
+	var downAxisDown = (primepad.getAxis(1) >= 1);
+	if(downBtnDown || downAxisDown){
+		if(downBtnDown) me.btnMove = true;
+		else if(downAxisDown) me.axisMove = true;
+		
 		me.down = true;
 	}
 		
@@ -99,6 +104,7 @@ var buttonUpCheck = function(){
 		}
 		
 		else if(me.btnMove && leftBtnUp){
+			me.dashing = false;
 			me.left = false;
 			me.pChar.dashPressTimeLeft = 1;
 			me.btnMove = false;
@@ -114,6 +120,7 @@ var buttonUpCheck = function(){
 		}
 		
 		else if(me.btnMove && rightBtnUp){
+			me.dashing = false;
 			me.right = false;
 			me.pChar.dashPressTimeRight = 1;
 			me.btnMove = false;
@@ -130,12 +137,15 @@ var buttonUpCheck = function(){
 	if(primepad.getButtonUp(0)) me.jump = false;
 	
 	var downBtnUp = primepad.getButtonUp(13);
-	if(downBtnUp || primepad.getAxis(1) < 1){
+	var downAxisUp = (primepad.getAxis(1) < 1);
+	if(downBtnUp || downAxisUp){
 		if(me.btnMove && downBtnUp){
 			me.down = false;
 			me.btnMove = false;
 		}
-		else if (!me.btnMove) me.down = false;
+		else if (me.axisMove && downAxisUp){ 
+			me.down = false;
+		}
 	}
 	
 	if(primepad.getButtonUp(2)) me.fireLV1 = false;
@@ -251,8 +261,6 @@ $( document ).keydown(function( event ) {
 });
 
 $( document ).keyup(function( event ) {
-	//lastE = event;
-	//console.log(event);
 	if(event.keyCode == 37){
 		me.dashing = false;
 		me.left = false;
