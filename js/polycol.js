@@ -108,9 +108,9 @@ Vec2.prototype.laserCast = function(maxLength, angle, stage){
 
 	for(var i = 0; i < stage.length; i++){
 						
-		if(temp.intersect(stage[i])){console.log(temp);
+		if(temp.intersect(stage[i])){
 			for(var step = 0; step < maxLength; step++){
-				var vecStep = new Vec2(this.x +Math.cos(angle) * step, this.y + Math.sin(angle) * step);
+				var vecStep = new Vec2(this.x + Math.cos(angle) * step, this.y + Math.sin(angle) * step);
 				var temp2 = new PolygonCollider([new Vec2(this.x, this.y), vecStep]);
 				if(temp2.intersect(stage[i])) return vecStep;
 			}

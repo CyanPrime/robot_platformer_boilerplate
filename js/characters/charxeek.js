@@ -54,7 +54,7 @@ Xeek.prototype.shootLV1 = function(){
 		var bulletX = (this.drawDirection == 0) ? (this.player.x - ((this.width/2) + 12)) : (this.player.x + ((this.width/2) + 12));
 		var angle = (this.airTime >= 1) ? ((this.drawDirection == 0) ? 145 : 30) : ((this.drawDirection == 0) ? 180 : 0)
 		var posMod = (this.airTime >= 1) ? ((this.drawDirection == 0) ? { x: 0, y: 4 } : { x: -13, y: 0 }) : ((this.drawDirection == 0) ? { x: -1, y: 0 } : { x: -5, y: 0 })
-		this.player.bullets.push(new Lasera(this.player.id, 2, 0.5, 0.5, 1000, bulletX, bulletY, 640, 4, angle, 50 - 4, posMod));
+		this.player.bullets.push(new LaserAngled(this.player.id, 2, 0.5, 0.5, 1000, bulletX, bulletY, 640, 4, angle, 50 - 4, posMod));
 		this.laserTime = 50;
 		
 		this.shotLV1Time = 32;
