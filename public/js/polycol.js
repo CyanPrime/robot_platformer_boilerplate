@@ -40,6 +40,10 @@ Vec2.prototype.dot = function(other){
 	return (this.x * other.x) + (this.y * other.y);
 };
 
+Vec2.prototype.dist = function(other){
+	return Math.sqrt(Math.pow((other.x - this.x),2) + Math.pow((other.y - this.y),2));
+};
+
 Vec2.prototype.groundCast = function(maxLength, stage){
 	var temp = new PolygonCollider([new Vec2(this.x, this.y), new Vec2(this.x, this.y + maxLength)]);
 	for(var i = 0; i < stage.length; i++){
@@ -96,6 +100,24 @@ Vec2.prototype.rightCast = function(maxLength, stage){
 	}
 	
 	return Number.POSITIVE_INFINITY;
+};
+
+Vec2.prototype.laserCast = function(maxLength, angle, stage){
+	var vecAngle = new Vec2(this.x + Math.cos(angle) * maxLength,this.y + Math.sin(angle) * maxLength);
+	var temp = new PolygonCollider([new Vec2(this.x, this.y), vecAngle]);
+
+	for(var i = 0; i < stage.length; i++){
+						
+		if(temp.intersect(stage[i])){console.log(temp);
+			for(var step = 0; step < maxLength; step++){
+				var vecStep = new Vec2(this.x +Math.cos(angle) * step, this.y + Math.sin(angle) * step);
+				var temp2 = new PolygonCollider([new Vec2(this.x, this.y), vecStep]);
+				if(temp2.intersect(stage[i])) return vecStep;
+			}
+		}
+	}
+	
+	return undefined;
 };
 
 PolygonCollider = function(pointArray, angle){

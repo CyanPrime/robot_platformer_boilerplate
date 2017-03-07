@@ -19,14 +19,25 @@ var Lasera = function(parentID, drawNum, dmg, stun, priority, x, y, width, heigh
 	this.posMod = posMod;
 	
 	this.rotPoint = new Vec2(this.x + this.posMod.x , this.y + this.posMod.y);
-		this.poly = new PolygonCollider([
-			new Vec2(this.x, this.y - (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //top left
-			new Vec2(this.x + this.width, this.y - (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //top right
-			new Vec2(this.x  + this.width + 5, this.y).rotateAround(this.angle * (3.14/180), this.rotPoint), //center left
-			new Vec2(this.x + this.width, this.y + (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //bottom right
-			new Vec2(this.x, this.y + (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //bottom left
-			new Vec2(this.x - 5, this.y).rotateAround(this.angle * (3.14/180), this.rotPoint), //center left
-		]);
+	
+	this.poly = new PolygonCollider([
+		new Vec2(this.x, this.y - (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //top left
+		new Vec2(this.x + this.width, this.y - (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //top right
+		new Vec2(this.x  + this.width + 5, this.y).rotateAround(this.angle * (3.14/180), this.rotPoint), //center left
+		new Vec2(this.x + this.width, this.y + (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //bottom right
+		new Vec2(this.x, this.y + (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //bottom left
+		new Vec2(this.x - 5, this.y).rotateAround(this.angle * (3.14/180), this.rotPoint), //center left
+	]);
+
+	for(var i = 0;  i < stage.length; i++){
+		if(this.poly.intersect(stage[i])){
+			var laserHit = this.rotPoint.laserCast(this.width, this.angle * (3.14/180), [stage[i]]);
+			if(laserHit != undefined){
+				console.log(laserHit);
+				this.width = new Vec2(this.x, this.y).dist(laserHit);
+			}
+		}
+	}
 	
 	//this.poly.rotateAround(this.angle, this.poly.points[5]);
 	//console.log(this.poly);
@@ -59,16 +70,16 @@ Lasera.prototype.update = function(plr, stage){
 			new Vec2(this.x, this.y + (this.height/2)).rotateAround(this.angle * (3.14/180), this.rotPoint), //bottom left
 			new Vec2(this.x - 5, this.y).rotateAround(this.angle * (3.14/180), this.rotPoint), //center left
 		]);
-		
-		/*
-		this.poly.rotateAround(this.angle, this.rotPoint);
-		this.poly.recalculate();*/
-		//console.log(this.poly);
-		/*for(var i = 0;  i < stage.length; i++){
+
+		for(var i = 0;  i < stage.length; i++){
 			if(this.poly.intersect(stage[i])){
-				this.dead = true;
+				var laserHit = this.rotPoint.laserCast(this.width, this.angle * (3.14/180), [stage[i]]);
+				if(laserHit != undefined){
+					console.log(laserHit);
+					this.width = new Vec2(this.x, this.y).dist(laserHit);
+				}
 			}
-		}*/
+		}
 	
 		//console.log("clients: " + lastKeyFrame.clients.length);
 				
